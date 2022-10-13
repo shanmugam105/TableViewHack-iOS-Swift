@@ -7,34 +7,60 @@
 
 import UIKit
 
+enum HomeItemList: CaseIterable {
+    case details
+    case filter
+    case brand
+    case user
+    case total
+    
+    var title: String {
+        switch self {
+        case .filter: return "Filter cell"
+        case .brand: return "Brand list"
+        case .user: return "User list"
+        case .total: return "Total amount details"
+        case .details: return "Details"
+        }
+    }
+    
+    func tableCell() -> UITableViewCell {
+        switch self {
+        case .filter:
+            let cell = CustomCollectionCell1()
+            cell.configureView(filterTitle: title)
+            return cell
+        case .brand:
+            let cell = CustomCollectionCell1()
+            cell.configureView(brandTitle: title)
+            return cell
+        case .user:
+            let cell = CustomCollectionCell3()
+            cell.textLabel?.text = title
+            return cell
+        case .total:
+            let cell = CustomCollectionCell3()
+            cell.textLabel?.text = title
+            return cell
+        case .details:
+            let cell = CustomCollectionCell3()
+            cell.textLabel?.text = title
+            return cell
+        }
+    }
+}
+
 class HomeViewController: UIViewController {
-    let cellTypes: [String] = [ "Filter cell", "Brand list", "User list", "Total amount details" ]
     @IBOutlet weak var tableView: UITableView!
 }
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        cellTypes.count
+        HomeItemList.allCases.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
-        case 0:
-            let cell = CustomCollectionCell1()
-            cell.textLabel?.text = cellTypes[0]
-            return cell
-        case 1:
-            let cell = CustomCollectionCell2()
-            cell.textLabel?.text = cellTypes[1]
-            return cell
-        case 2:
-            let cell = CustomCollectionCell3()
-            cell.textLabel?.text = cellTypes[2]
-            return cell
-        default:
-            let cell = CustomCollectionCell3()
-            cell.textLabel?.text = cellTypes[3]
-            return cell
-        }
+        HomeItemList.allCases[indexPath.row].tableCell()
     }
 }
 
@@ -43,6 +69,12 @@ extension HomeViewController: UITableViewDelegate {}
 class CustomCollectionCell1: UITableViewCell {
     func configureView(filterTitle: String?) {
         textLabel?.text = filterTitle
+        textLabel?.textColor = .red
+    }
+    
+    func configureView(brandTitle: String?) {
+        textLabel?.text = brandTitle
+        textLabel?.textColor = .blue
     }
 }
 
